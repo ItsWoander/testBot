@@ -4,14 +4,14 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 import config
 from datetime import datetime
-from app.Keyboard import phone_skam
+#from app.Keyboard import phone_skam
 import code
 router = Router()
 
 
 @router.message(CommandStart())
 async def start(message:Message):
-    await message.answer('КУ! для використання напиши "Хто я"',reply_markup=phone_skam)
+    await message.answer('КУ! для використання напиши "Хто я"')
 
 
 
