@@ -8,8 +8,9 @@ from app.handlerq import router
 import code
 import app.Keyboard
 from app.admin_handler import admin_router
+import datetime
 
-
+import logging
 
 
 bot = Bot(token=config.API_TOK)
@@ -17,9 +18,25 @@ dp = Dispatcher()
 
 
 
-async def main():
-    dp.include_router(admin_router)
-    dp.include_router(router)
-    await dp.start_polling(bot)
 
-asyncio.run(main())
+async def main():
+    while True:
+        try:
+            dp.include_router(admin_router)
+            dp.include_router(router)
+            await dp.start_polling(bot)
+        except Exception as e:
+            print(e)
+    
+
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+
+    while True:
+        try:
+            asyncio.run(main())
+        except Exception as e:
+            logging.exception("Критична помилка, перезапускаємо бот...")
+            asyncio.sleep(5)  # Затримка перед перезапуском
