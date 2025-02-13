@@ -4,15 +4,13 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 import config
 from datetime import datetime
-#from app.Keyboard import phone_skam
 import code
 router = Router()
 
 
 @router.message(CommandStart())
 async def start(message:Message):
-    await message.answer('КУ! для використання напиши "Хто я"')
-
+    await message.answer('Я вмію банить і мутить)))) Ну і інформація про тебе "Хто я" ')
 
 
 @router.message(Command('code'))
@@ -27,26 +25,45 @@ async def help(message: Message):
 
 
 
-
-
-
-
-
-
+@router.message(Command('send'))
+async def send(message:Message):
+    #адмінська команда
+    if message.from_user.id in config.Owner_players:
+        print(1)
+        if message.reply_to_message != None:
+            from bot import bot
+            comand = message.text
+            comand = comand.split()
+            comand = list(comand)
+            if len(comand) == 2:
+                print(2)
+                id_chat = comand[1]
+                print(id_chat)
+                #повідомлення яке треба переслати
+                replyy = message.reply_to_message
+                #при просто тексті текст міститься в text, а якшо це опис фото то caption
+                if not(replyy.text is None):
+                    print(replyy.text)
+                    await bot.send_message(chat_id=id_chat, text=replyy.text)
+                elif not(replyy.photo is None ):
+                    await bot.send_photo(chat_id=id_chat,photo=replyy.photo[-1].file_id, caption=replyy.caption)
+                elif not(replyy.video is None):
+                    await bot.send_video(chat_id=id_chat,video=replyy.video.file_id, )
+                   
+                else:
+                    message.reply('Не підтримуємий формат')
+                await bot.send_animation('CgACAgQAAyEFAASNcZgUAAIC92euVxroffStwY2Pl2JhlWgoJCO2AAItAwACQYIMUxqAY7aLlNjMNgQ')
+            else:
+                message.reply('Не правильний формат\nПравильний формат:\n/send 12345')
+        else:
+            message.reply('Немає реплаю')
+    else:
+        message.reply('Ви не адмін. ФУУУУУУ🤮🤮🤮🤮🤮🤮🤮')
+        
 
 
 @router.message(F.text.upper() == 'Хто я'.upper())
 async def info(message:Message):
-    try:
-        with open("players.txt", "a") as file:
-            
-            file.write(f"{message.from_user.id},  {"@"+ message.from_user.username if message.from_user.username != None else None} {message.from_user.first_name} - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} \n")
-            await message.bot.send_message(config.OWNER, f"{message.from_user.id},  {"@"+ message.from_user.username if message.from_user.username != None else None} {message.from_user.first_name} - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    except BaseException as e:
-        await message.answer(f'Помилка логування{e}')
-
-        await message.bot.send_message(config.OWNER, f"{message.from_user.id},  {"@"+ message.from_user.username if message.from_user.username != None else None} {message.from_user.first_name} - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n помилка логування: {e}" )
-
 
     
 

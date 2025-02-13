@@ -41,7 +41,7 @@ async def ban(message:Message):
                 # обробник помилки, якщо блокнуть бота, або користувач немає пп з цим ботом
             except Exception as e:
                 await message.reply_animation('CgACAgIAAxkBAAICuGesk9DsFcsEXkTcOMYvXkMR75QjAAKdcAACxnwoSINS985tgdYCNgQ')
-                await message.reply('Не можна замутити адміна')
+                await message.reply('Не можна заблокувати адміна')
 
 
             #відсилаємо користувачу повідомлення в лс
@@ -50,7 +50,7 @@ async def ban(message:Message):
             except Exception as r:
                 pass # обробник помилки, якщо блокнуть бота, або користувач немає пп з цим ботом
         else:
-            await message.reply('Ви повинні написати цю команду в реплаї порушника')
+            await message.reply_animation("CgACAgIAAyEFAASNcZgUAAICiGetp4YJtMEfL4Os7inAvL40GF6pAAJ6TwACDZsgSPzDp7JlWLIkNgQ", caption='Команда /ban - додасть користувача у чорний список')
     else:
         await message.reply('Команда не працює в пп')
 
@@ -82,17 +82,18 @@ async def unban(message:Message):
 
             try:
                 await bot.unban_chat_member(chat_id_group, id_useer)
-                await message.reply(f'Коричтувача {message.reply_to_message.from_user.first_name} було розблковано')
+                await message.reply(f'Користувача {message.reply_to_message.from_user.first_name} було розблковано')
             
             except BaseException as e:
-                await message.reply(f'Щось пішло не так \n Переконайтесь що ви не розблокуете адміністатора{e}')
+                await message.reply(f'Не можна заблокувати адміна')
             
             try:
                 await bot.send_message(message.reply_to_message.from_user.id, f"Вас було розблоковано у чаті {message.chat.title}\n Посилання:{"@"+str(message.chat.username) if message.chat.username != None else 'None' }")
             except Exception as r:
                 pass # обробник помилки, якщо блокнуть бота, або користувач немає пп з цим ботом
         else:
-            await message.reply('Ви повинні написати цю команду в реплаї порушника')
+            
+            await message.reply('Команда /unban - видалить користувача з чорного списку')
     else:
         await message.reply('Команда не працює в пп')
 
@@ -185,8 +186,8 @@ async def mute(message:Message):
                     await bot.restrict_chat_member(message.chat.id, id_user_reply, permissions, until_date=untill_date)
                     await message.reply(f'Користувачу заборонено розмовляти \nТривалість:{text[1] if len(text) == 2 else "∞"}')
                 except:
-                    await message.reply_animation('CgACAgIAAxkBAAICuGesk9DsFcsEXkTcOMYvXkMR75QjAAKdcAACxnwoSINS985tgdYCNgQ')
-                    await message.reply('Не можна замутити адміна')
+                    await message.reply_animation('CgACAgIAAxkBAAICuGesk9DsFcsEXkTcOMYvXkMR75QjAAKdcAACxnwoSINS985tgdYCNgQ', caption='Не можна замутити адміна')
+  
 
 
 
@@ -194,9 +195,10 @@ async def mute(message:Message):
             else:
                 await message.reply("У вас немає прав ")
                 return
+            
 
         else:
-            await message.reply("Затикати щелепу треба за таким форматом:\n/mute 1h /mute 2d /mute 3m /mute 4s")
+            await message.reply_animation('CgACAgQAAyEFAASNcZgUAAICcGetphSqQZGYhwH1_bBzck4QqiF6AAK_EwACJMEJUuoBYBOuj4M_NgQ',caption="Затулити пельку: Заборонить користувачу розмовляти:\n s-секунда m-хвилина h-години d-дні \n/mute 1s /mute 2m /mute 3h /mute 4d")
     else:
         await message.reply("Команда не доступна в пп")
 
