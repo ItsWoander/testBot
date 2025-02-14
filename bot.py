@@ -5,10 +5,11 @@ from aiogram.types import Message
 import config
 from datetime import datetime
 from app.handlerq import router
+import code
 import app.Keyboard
 from app.admin_handler import admin_router
 import datetime
-
+from app.fun import fun_router
 import logging
 
 
@@ -33,6 +34,7 @@ async def main():
         try:
             dp.include_router(admin_router)
             dp.include_router(router)
+            dp.include_router(fun_router)
             await dp.start_polling(bot)
         except Exception as e:
             print(e)

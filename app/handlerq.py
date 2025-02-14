@@ -6,10 +6,19 @@ import config
 from datetime import datetime
 import code
 router = Router()
-
+import json
 
 @router.message(CommandStart())
 async def start(message:Message):
+    with open(r"D:\pyth\BOTT\app\players.json", 'r+') as data:
+        bd = json.load(data)
+        bd['players'].setdefault(str(message.from_user.id), {'rep': 5, 'money': 1000})
+        data.seek(0)
+        json.dump(bd,data,indent=2)
+
+
+
+
     await message.answer('Я вмію банить і мутить)))) Ну і інформація про тебе "Хто я" ')
 
 
@@ -51,14 +60,14 @@ async def send(message:Message):
                     await bot.send_video(chat_id=id_chat,video=replyy.video.file_id, )
                    
                 else:
-                    message.reply('Не підтримуємий формат')
-                await bot.send_animation('CgACAgQAAyEFAASNcZgUAAIC92euVxroffStwY2Pl2JhlWgoJCO2AAItAwACQYIMUxqAY7aLlNjMNgQ')
+                    await message.reply('Не підтримуємий формат')
+                await message.reply_animation('CgACAgQAAyEFAASNcZgUAAIC92euVxroffStwY2Pl2JhlWgoJCO2AAItAwACQYIMUxqAY7aLlNjMNgQ')
             else:
-                message.reply('Не правильний формат\nПравильний формат:\n/send 12345')
+                await message.reply('Не правильний формат\nПравильний формат:\n/send 12345')
         else:
-            message.reply('Немає реплаю')
+            await message.reply('Немає реплаю')
     else:
-        message.reply('Ви не адмін. ФУУУУУУ🤮🤮🤮🤮🤮🤮🤮')
+        await message.reply('Ви не адмін. ФУУУУУУ🤮🤮🤮🤮🤮🤮🤮')
         
 
 
