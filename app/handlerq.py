@@ -7,19 +7,51 @@ from datetime import datetime
 import code
 router = Router()
 import json
-
+from app.Keyboard import kb
+from app.func.stack_test import Player
 @router.message(CommandStart())
 async def start(message:Message):
-    with open(r"D:\pyth\BOTT\app\players.json", 'r+') as data:
-        bd = json.load(data)
-        bd['players'].setdefault(str(message.from_user.id), {'rep': 5, 'money': 1000})
-        data.seek(0)
-        json.dump(bd,data,indent=2)
+    
+    await message.reply('Я вмію банить і мутить)))) Ну і інформація про тебе "Хто я" ', reply_markup=kb())
+
+
+@router.callback_query(lambda c: c.data == "mod_pressed")
+async def button_1(callback: types.CallbackQuery):
+    await callback.message.edit_text(
+            text="Модерація:\n/ban - заблокувати користувача\n/mute - заткнути комусь пельку\n/report - поскаржитись на користувача\n/admins - список адміністрації",
+        reply_markup=kb()
+    )
+    await callback.answer()  # Закриваємо анімацію завантаження
+
+@router.callback_query(lambda c: c.data == "game_pressed")
+async def button_1(callback: types.CallbackQuery):
+    a = Player(callback.message.reply_to_message.from_user.id, callback.message.reply_to_message.from_user.full_name)
+    text="<b>Ігрові команди:</b>\nКости: /dice (число) (ставка)\nСлоти: /slot (ставка)\nКоманди без вкладень:\nФут\nБас\nДар\nБоу "
+    if not(await a.subscribe(callback.message)):
+        text += f'\n<b>Примітка:</b>\nПідписники каналу <a href="{config.chat_user}">{config.name_chat} </a> мають більшу вдачу)'
+
+
+
+    await callback.message.edit_text(
+        text=text,
+        reply_markup=kb(),parse_mode='HTML'
+    )
+    await callback.answer()  # Закриваємо анімацію завантаження
 
 
 
 
-    await message.answer('Я вмію банить і мутить)))) Ну і інформація про тебе "Хто я" ')
+@router.callback_query(lambda c: c.data == "fun_pressed")
+async def button_1(callback: types.CallbackQuery):
+    await callback.message.edit_text(
+        text="Фансервіс:\nПрофіль: /profile\nПередати гроші:/pay (сумма) \nПравила: +rules (правила)\nПрибрати правила -rules \nПодивитись правила rules ",
+        reply_markup=kb()
+    )
+    await callback.answer()  # Закриваємо анімацію завантаження
+
+
+
+
 
 
 @router.message(Command('code'))
@@ -34,48 +66,13 @@ async def help(message: Message):
 
 
 
-@router.message(Command('send'))
-async def send(message:Message):
-    #адмінська команда
-    if message.from_user.id in config.Owner_players:
-        print(1)
-        if message.reply_to_message != None:
-            from bot import bot
-            comand = message.text
-            comand = comand.split()
-            comand = list(comand)
-            if len(comand) == 2:
-                print(2)
-                id_chat = comand[1]
-                print(id_chat)
-                #повідомлення яке треба переслати
-                replyy = message.reply_to_message
-                #при просто тексті текст міститься в text, а якшо це опис фото то caption
-                if not(replyy.text is None):
-                    print(replyy.text)
-                    await bot.send_message(chat_id=id_chat, text=replyy.text)
-                elif not(replyy.photo is None ):
-                    await bot.send_photo(chat_id=id_chat,photo=replyy.photo[-1].file_id, caption=replyy.caption)
-                elif not(replyy.video is None):
-                    await bot.send_video(chat_id=id_chat,video=replyy.video.file_id, )
-                   
-                else:
-                    await message.reply('Не підтримуємий формат')
-                await message.reply_animation('CgACAgQAAyEFAASNcZgUAAIC92euVxroffStwY2Pl2JhlWgoJCO2AAItAwACQYIMUxqAY7aLlNjMNgQ')
-            else:
-                await message.reply('Не правильний формат\nПравильний формат:\n/send 12345')
-        else:
-            await message.reply('Немає реплаю')
-    else:
-        await message.reply('Ви не адмін. ФУУУУУУ🤮🤮🤮🤮🤮🤮🤮')
-        
+
 
 
 @router.message(F.text.upper() == 'Хто я'.upper())
 async def info(message:Message):
 
     
-
 
      # Беремо останню доступну якість
     photo_userss = await message.bot.get_user_profile_photos(message.from_user.id)
@@ -92,3 +89,4 @@ id:{message.from_user.id}
 Преміум:{message.from_user.is_premium}
 Чи було вас додано: {message.from_user.added_to_attachment_menu}
 """)
+    
